@@ -41,6 +41,24 @@ std::string abspath(const std::string& path) {
 }
 
 
+std::string dirname(const std::string& path) {
+    if (path.empty())
+        return path;
+
+    std::vector<std::string> separated = split(path);
+    std::string processed;
+    if (path[0] == os::pathsep)
+        processed.push_back(os::pathsep);  // include starting slash of path
+
+    for (std::vector<std::string>::const_iterator it = separated.begin();
+            it != separated.end();
+            ++it) {
+        processed = join(processed, *it);
+    }
+    return processed;
+}
+
+
 std::string join(const std::string& lhs, const std::string& rhs) {
     std::string dest(lhs);
 

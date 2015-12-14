@@ -15,6 +15,7 @@ const char pathsep =
 
 std::string get_current_dir();
 std::string abspath(const std::string& path);
+std::string dirname(const std::string& path);
 std::string join(const std::string& lhs, const std::string& rhs);
 std::vector<std::string> split(const std::string &path,
                                char delimiter = pathsep);
