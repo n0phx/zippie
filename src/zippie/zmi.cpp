@@ -6,7 +6,6 @@
 
 #include "zippie/datadescriptor.h"
 #include "zippie/lfh.h"
-#include "zippie/scopedstream.h"
 #include "zippie/utils.h"
 #include "zippie/zmi.h"
 
