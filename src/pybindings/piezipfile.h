@@ -139,7 +139,8 @@ static PyObject* PieZipFile_open(PieZipFile *self, PyObject *args) {
     if (!zmi)
         return NULL;
 
-    piezmfo->source = new scopedistream(self->zip_file->open(fname));
+    piezmfo->source = new zippie::streams::scopedistream(
+                                                self->zip_file->open(fname));
     piezmfo->size = zmi->file_data_size();
     return reinterpret_cast<PyObject*>(piezmfo);
 }

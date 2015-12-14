@@ -12,8 +12,11 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace records {
+
 static const std::streamsize CDFH_SIZE = 46;
-static const signature_type CDFH_SIGN = {0x02014b50};
+static const utils::signature_type CDFH_SIGN = {0x02014b50};
 
 
 #pragma pack(push, 1)  // set padding to 1 byte, saves previous value
@@ -40,7 +43,7 @@ struct CentralDirFileHeaderRecord {
     extra field (variable size)
     file comment (variable size)
     */
-    signature_type signature;
+    utils::signature_type signature;
     uint16_t version_made_by;
     uint16_t version_needed_to_extract;
     uint16_t general_purpose_bit_flag;
@@ -77,7 +80,7 @@ class CentralDirFileHeader {
     uint64_t relative_offset_of_local_header_;
     std::string file_name_;
     std::string file_comment_;
-    bit_flags general_purpose_bit_flag_;
+    utils::bit_flags general_purpose_bit_flag_;
     std::map<uint16_t, ExtraField> extra_fields_;
 
     std::streamsize read_extra_field(std::ifstream* source,
@@ -88,4 +91,7 @@ class CentralDirFileHeader {
     std::streampos get_local_file_header_offset();
     std::string get_file_name();
 };
+
+}  // namespace records
+}  // namespace zippie
 #endif  // ZIPPIE_ZIPPIE_CDFH_H_

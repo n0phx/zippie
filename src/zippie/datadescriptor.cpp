@@ -8,6 +8,9 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace records {
+
 std::streamsize DataDescriptor::read(std::istream* source) {
     // seek backwards the expected size of the data descriptor from the end of
     // the stream
@@ -34,3 +37,6 @@ uint32_t DataDescriptor::compressed_size() {
 uint32_t DataDescriptor::uncompressed_size() {
     return record_.uncompressed_size;
 }
+
+}  // namespace records
+}  // namespace zippie

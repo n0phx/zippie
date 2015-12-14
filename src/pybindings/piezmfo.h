@@ -13,7 +13,7 @@
 
 typedef struct {
     PyObject_HEAD
-    scopedistream* source;
+    zippie::streams::scopedistream* source;
     std::streamsize size;
 } PieZipMemberFileObject;
 
@@ -31,12 +31,14 @@ static PyObject* PieZipMemberFileObject_read(PieZipMemberFileObject *self,
     if (!PyArg_ParseTuple(args, "|i", &n))
         return NULL;
 
-    byte_vec buffer;
+    zippie::utils::byte_vec buffer;
     std::streamsize bytes_read = 0;
     if (n >= 0)
-        bytes_read = read_into(self->source, &buffer, n);
+        bytes_read = zippie::utils::read_into(self->source, &buffer, n);
     else
-        bytes_read = read_into(self->source, &buffer, self->size);
+        bytes_read = zippie::utils::read_into(self->source,
+                                              &buffer,
+                                              self->size);
 
     if (bytes_read == 0)
         return Py_BuildValue("s", "");

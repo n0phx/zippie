@@ -9,9 +9,12 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace records {
+
 // data descriptor record size includes the size of the optional signature
 static const std::streamsize DD_SIZE = 16;
-static const signature_type DD_SIGN = {0x08074b50};
+static const utils::signature_type DD_SIGN = {0x08074b50};
 
 
 #pragma pack(push, 1)  // set padding to 1 byte, saves previous value
@@ -33,4 +36,7 @@ class DataDescriptor {
     uint32_t compressed_size();
     uint32_t uncompressed_size();
 };
+
+}  // namespace records
+}  // namespace zippie
 #endif  // ZIPPIE_ZIPPIE_DATA_DESCRIPTOR_H_

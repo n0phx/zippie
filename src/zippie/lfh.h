@@ -12,8 +12,11 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace records {
+
 static const std::streamsize LFH_SIZE = 30;
-static const signature_type LFH_SIGN = {0x04034b50};
+static const utils::signature_type LFH_SIGN = {0x04034b50};
 static const int ENCRYPTION_BIT = 1;
 static const int DATA_DESCRIPTOR_BIT = 3;
 
@@ -35,7 +38,7 @@ struct LocalFileHeaderRecord {
     file name (variable size)
     extra field (variable size)
     */
-    signature_type signature;
+    utils::signature_type signature;
     uint16_t version_needed_to_extract;
     uint16_t general_purpose_bit_flag;
     uint16_t compression_method;
@@ -60,17 +63,22 @@ class LocalFileHeader {
     uint64_t compressed_size_;
     uint64_t uncompressed_size_;
     std::string file_name_;
-    bit_flags general_purpose_bit_flag_;
+    utils::bit_flags general_purpose_bit_flag_;
     std::map<uint16_t, ExtraField> extra_fields_;
 
-    std::streamsize read_extra_field(scopedistream* source,
+    std::streamsize read_extra_field(streams::scopedistream* src,
                                      std::streamsize length);
  public:
-    std::streamsize read(scopedistream* source);
+    std::streamsize read(streams::scopedistream* source,
+                         std::streampos offset = 0);
     bool is_encrypted();
     bool has_data_descriptor();
     std::string filename();
     uint64_t compressed_size();
     uint32_t crc32();
 };
+
+}  // namespace records
+}  // namespace zippie
+
 #endif  // ZIPPIE_ZIPPIE_LFH_H_

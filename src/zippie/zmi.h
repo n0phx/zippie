@@ -21,10 +21,10 @@ class ZipMemberInfo {
  private:
     std::streampos member_start_;
     std::streampos member_size_;
-    scopedistream source_;
-    CentralDirFileHeader cdfh_;
-    LocalFileHeader lfh_;
-    byte_vec eh_;
+    streams::scopedistream source_;
+    records::CentralDirFileHeader cdfh_;
+    records::LocalFileHeader lfh_;
+    utils::byte_vec eh_;
     bool loaded_;
     std::streampos file_data_offset_;
     std::streamsize file_data_size_;
@@ -34,7 +34,7 @@ class ZipMemberInfo {
     explicit ZipMemberInfo(std::istream* source,
                            std::streampos start,
                            std::streamsize size,
-                           CentralDirFileHeader cdfh);
+                           records::CentralDirFileHeader cdfh);
     void load();
     std::string filename();
     std::streampos file_data_offset();

@@ -6,6 +6,9 @@
 #include <vector>
 
 
+namespace zippie {
+namespace streams {
+
 static const std::size_t DEFAULT_BUFFER_SIZE = 256;
 
 
@@ -74,4 +77,7 @@ class scopedistream: virtual scopedistream_base, public std::istream {
                                                 std::ios(&this->sbuf_),
                                                 std::istream(&this->sbuf_) {}
 };
+
+}  // namespace streams
+}  // namespace zippie
 #endif  // ZIPPIE_ZIPPIE_SCOPEDSTREAM_H_

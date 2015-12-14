@@ -6,6 +6,9 @@
 #include "zippie/scopedstream.h"
 
 
+namespace zippie {
+namespace streams {
+
 scopedstreambuf::scopedstreambuf(const scopedstreambuf& other):
                                                 source_(other.source_),
                                                 start_(other.start_),
@@ -109,3 +112,6 @@ std::streamsize scopedstreambuf::xsgetn(char* s, std::streamsize n) {
 std::streampos scopedstreambuf::abspos() const {
     return start_ + pos_;
 }
+
+}  // namespace streams
+}  // namespace zippie

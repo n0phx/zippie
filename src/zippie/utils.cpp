@@ -9,6 +9,9 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace utils {
+
 std::string to_hex(const unsigned char* bytes, std::size_t length) {
     std::stringstream msg;
     for (std::size_t i = 0; i < length; i++) {
@@ -69,3 +72,6 @@ std::streamsize read_into(std::istream* source, std::string* into,
         into->assign(into_vec.begin(), into_vec.end());
     return bytes_read;
 }
+
+}  // namespace utils
+}  // namespace zippie

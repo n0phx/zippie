@@ -10,6 +10,9 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace records {
+
 std::streamsize CentralDirFileHeader::read(std::ifstream* source,
                                            std::streampos offset) {
     CentralDirFileHeaderRecord record;
@@ -20,12 +23,12 @@ std::streamsize CentralDirFileHeader::read(std::ifstream* source,
                                   &record,
                                   CDFH_SIZE,
                                   CDFH_SIGN);
-    } catch (signature_does_not_match& e) {
-        throw bad_zip_file("Central directory file header " +
-                           std::string(e.what()));
-    } catch (read_error& e) {
-        throw bad_zip_file("Central directory file header read error. " +
-                           std::string(e.what()));
+    } catch (utils::signature_does_not_match& e) {
+        throw utils::bad_zip_file("Central directory file header " +
+                                  std::string(e.what()));
+    } catch (utils::read_error& e) {
+        throw utils::bad_zip_file("Central directory file header read error. " +
+                                  std::string(e.what()));
     }
     // copy data that needs to be publicly accessible from the private record
     version_made_by_ = record.version_made_by;
@@ -41,11 +44,16 @@ std::streamsize CentralDirFileHeader::read(std::ifstream* source,
     external_file_attributes_ = record.external_file_attributes;
     relative_offset_of_local_header_ = record.relative_offset_of_local_header;
     // initialize the ``flags_`` bitset with the freshly read raw data
-    general_purpose_bit_flag_ = bit_flags(record.general_purpose_bit_flag);
+    general_purpose_bit_flag_ = utils::bit_flags(
+                                            record.general_purpose_bit_flag);
     // read fields with with variable sizes
-    bytes_read += read_into(source, &file_name_, record.file_name_length);
+    bytes_read += utils::read_into(source,
+                                   &file_name_,
+                                   record.file_name_length);
     bytes_read += read_extra_field(source, record.extra_field_length);
-    bytes_read += read_into(source, &file_comment_, record.file_comment_length);
+    bytes_read += utils::read_into(source,
+                                   &file_comment_,
+                                   record.file_comment_length);
     return bytes_read;
 }
 
@@ -83,3 +91,6 @@ std::streampos CentralDirFileHeader::get_local_file_header_offset() {
 std::string CentralDirFileHeader::get_file_name() {
     return file_name_;
 }
+
+}  // namespace records
+}  // namespace zippie

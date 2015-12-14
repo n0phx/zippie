@@ -10,6 +10,9 @@
 #include "zippie/utils.h"
 
 
+namespace zippie {
+namespace records {
+
 static const std::streamsize EF_SIZE = 4;
 // zip64 extended information extra field header id
 static const uint16_t Z64_EIEFHI = 0x0001;
@@ -26,8 +29,8 @@ struct ExtraFieldRecord {
 class ExtraField {
  private:
     ExtraFieldRecord record_;
-    byte_vec data_;
-    byte_vec::size_type pos_;
+    utils::byte_vec data_;
+    utils::byte_vec::size_type pos_;
 
  public:
     ExtraField(): pos_(0) {}
@@ -41,4 +44,8 @@ class ExtraField {
         pos_ += sizeof(*into);
     }
 };
+
+}  // namespace records
+}  // namespace zippie
+
 #endif  // ZIPPIE_ZIPPIE_EXTRA_FIELD_H_

@@ -12,6 +12,9 @@
 #include <vector>
 
 
+namespace zippie {
+namespace utils {
+
 typedef std::bitset<16> bit_flags;
 typedef std::vector<unsigned char> byte_vec;
 union signature_type {
@@ -92,4 +95,7 @@ std::streamsize read_record(std::istream* source,
     }
     return bytes_read;
 }
+
+}  // namespace utils
+}  // namespace zippie
 #endif  // ZIPPIE_ZIPPIE_UTILS_H_

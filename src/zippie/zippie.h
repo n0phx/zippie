@@ -17,24 +17,26 @@
 
 namespace zippie {
 
-typedef std::vector<CentralDirFileHeader> cdfh_vec;
+typedef std::vector<records::CentralDirFileHeader> cdfh_vec;
 typedef std::map<std::string, ZipMemberInfo> zmi_map;
+
+namespace records {
 
 static const std::streamsize MAX_COMMENT_SIZE = 65535;
 // end of central directory
 static const std::streamsize EOCD_SIZE = 22;
-static const signature_type EOCD_SIGN = {0x06054b50};
+static const utils::signature_type EOCD_SIGN = {0x06054b50};
 // zip64 end of central directory locator
 static const std::streamsize Z64_EOCD_LOC_SIZE = 20;
-static const signature_type Z64_EOCD_LOC_SIGN = {0x07064b50};
+static const utils::signature_type Z64_EOCD_LOC_SIGN = {0x07064b50};
 // zip64 end of central directory
 static const std::streamsize Z64_EOCD_SIZE = 56;
-static const signature_type Z64_EOCD_SIGN = {0x06064b50};
+static const utils::signature_type Z64_EOCD_SIGN = {0x06064b50};
 // archive decryption header
 static const std::streamsize ADH_SIZE = 12;
 // archive extra data record
 static const std::streamsize AEDR_SIZE = 8;
-static const signature_type AEDR_SIGN = {0x08064b50};
+static const utils::signature_type AEDR_SIGN = {0x08064b50};
 
 
 // Byte alignment must be defined for all structs, otherwise input data cannot
@@ -52,7 +54,7 @@ struct EOCD {
     .ZIP file comment length                                        2 bytes
     .ZIP file comment       (variable size)
     */
-    signature_type signature;
+    utils::signature_type signature;
     uint16_t disk_number;
     uint16_t disk_start;
     uint16_t entries_this_disk;
@@ -71,7 +73,7 @@ struct Z64EOCDLoc {
     relative offset of the zip64 end of central directory record    8 bytes
     total number of disks                                           4 bytes
     */
-    signature_type signature;
+    utils::signature_type signature;
     uint32_t z64_eocd_disk_number;
     uint64_t z64_eocd_offset;
     uint32_t disk_count;
@@ -92,7 +94,7 @@ struct Z64EOCD {
     offset of start of cent.dir.with respect to the start disk num. 8 bytes
     zip64 extensible data sector    (variable size)
     */
-    signature_type signature;
+    utils::signature_type signature;
     uint64_t record_size;
     uint16_t version_made_by;
     uint16_t version_needed_to_extract;
@@ -102,7 +104,7 @@ struct Z64EOCD {
     uint64_t entries_total;
     uint64_t central_dir_size;
     uint64_t central_dir_start_offset;
-    byte_vec extensible_data_sector;
+    utils::byte_vec extensible_data_sector;
 };
 
 
@@ -112,26 +114,28 @@ struct AEDRecord {
     extra field length              4 bytes
     extra field data                (variable size)
     */
-    signature_type signature;
+    utils::signature_type signature;
     uint32_t extra_field_length;
-    byte_vec extra_field;
+    utils::byte_vec extra_field;
 };
 #pragma pack(pop)  // restore previous pack value
+
+}  // namespace records
 
 
 class ZipFile {
  private:
     std::ifstream fp_;
     std::streamsize filesize_;
-    EOCD eocd_;
-    Z64EOCDLoc z64_eocd_loc_;
-    Z64EOCD z64_eocd_;
-    AEDRecord aedr_;
-    byte_vec adh_;
+    records::EOCD eocd_;
+    records::Z64EOCDLoc z64_eocd_loc_;
+    records::Z64EOCD z64_eocd_;
+    records::AEDRecord aedr_;
+    utils::byte_vec adh_;
     zmi_map zip_file_infos_;
     bool is_zip64_;
 
-    std::streampos search(const byte_vec& bytes);
+    std::streampos search(const utils::byte_vec& bytes);
     std::streampos search(const unsigned char* bytes, std::size_t length);
     std::streampos read_eocd();
     std::streampos read_z64_eocd_loc(std::streampos eocd_offset);
@@ -144,7 +148,7 @@ class ZipFile {
  public:
     explicit ZipFile(const char* filename);
     ZipMemberInfo& getinfo(const std::string& filename);
-    scopedistream open(const std::string& filename);
+    streams::scopedistream open(const std::string& filename);
     void extract(const std::string& filename, const std::string& path);
     std::vector<std::string> namelist();
     void close();

@@ -16,16 +16,16 @@ namespace zippie {
 ZipMemberInfo::ZipMemberInfo(std::istream* source,
                              std::streampos member_start,
                              std::streamsize member_size,
-                             CentralDirFileHeader cdfh):
-                                                    member_start_(member_start),
-                                                    member_size_(member_size),
-                                                    source_(source,
-                                                            member_start_,
-                                                            member_size_,
-                                                            DEFAULT_BUFFER_SIZE,
-                                                            false),
-                                                    cdfh_(cdfh),
-                                                    loaded_(false) {}
+                             records::CentralDirFileHeader cdfh):
+                                        member_start_(member_start),
+                                        member_size_(member_size),
+                                        source_(source,
+                                                member_start_,
+                                                member_size_,
+                                                streams::DEFAULT_BUFFER_SIZE,
+                                                false),
+                                        cdfh_(cdfh),
+                                        loaded_(false) {}
 
 
 void ZipMemberInfo::load() {
@@ -34,9 +34,10 @@ void ZipMemberInfo::load() {
         lfh_.read(&source_);
         // if file is encrypted, read the 12 byte encryption header
         if (lfh_.is_encrypted()) {
-            read_into(&source_, &eh_, EH_SIZE);
+            utils::read_into(&source_, &eh_, EH_SIZE);
             // TODO: implement support for encrypted archives
-            throw bad_zip_file("Encrypted archives are not yet supported");
+            throw utils::bad_zip_file("Encrypted archives are not yet "
+                                      "supported");
         }
         // after reading the local file header(and optionally the encryption
         // header), the current position should point to the start of the file
@@ -46,7 +47,7 @@ void ZipMemberInfo::load() {
         file_data_size_ = lfh_.compressed_size();
         crc32_ = lfh_.crc32();
         if (lfh_.has_data_descriptor()) {
-            DataDescriptor dd;
+            records::DataDescriptor dd;
             dd.read(&source_);
             file_data_size_ = dd.compressed_size();
             crc32_ = dd.crc32();
