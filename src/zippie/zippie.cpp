@@ -62,6 +62,10 @@ void ZipFile::extract(const std::string& filename, const std::string& path) {
         os::makedirs(dest);
         return;
     }
+    // make sure destination folder exists
+    std::string parentdir = os::dirname(dest);
+    if (!parentdir.empty() && parentdir != dest)
+        os::makedirs(parentdir);
     // TODO: avoid such copies
     scopedistream sis(open(filename));
     std::ofstream out(dest.c_str(),
