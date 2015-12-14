@@ -20,7 +20,7 @@ A zip archive handler tool, attempting to achieve API compatibility with Pythons
  - [ ] [IN PROGRESS] expose all header fields through the memberinfo api
 
 ## TODO
- - [ ] [TODO] Fix screwups
- - [ ] [TODO] Write / create zipfiles
- - [ ] [TODO] Make code utilize C++11 feature (especially move semantics for istream is needed)
- - [ ] [TODO] Support for compression using zlib...maybe
+ - [ ] [TODO] fix screwups
+ - [ ] [TODO] write / create zipfiles
+ - [ ] [TODO] make code utilize C++11 features (especially move semantics for istream is needed)
+ - [ ] [TODO] implement compression support using zlib...maybe
