@@ -13,7 +13,6 @@
 #include "zippie/os.h"
 
 
-
 namespace os {
 
 std::string get_current_dir() {
@@ -46,6 +45,7 @@ std::string dirname(const std::string& path) {
         return path;
 
     std::vector<std::string> separated = split(path);
+    separated.pop_back();  // since parent is needed, ignore last segment
     std::string processed;
     if (path[0] == os::pathsep)
         processed.push_back(os::pathsep);  // include starting slash of path
