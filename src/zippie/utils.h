@@ -5,7 +5,6 @@
 
 #include <bitset>
 #include <fstream>
-#include <iomanip>
 #include <map>
 #include <sstream>
 #include <string>
