@@ -17,7 +17,7 @@
 #include "zippie/utils.h"
 #include "zippie/zippie.h"
 #include "zippie/zmi.h"
-
+#include "zippie/streams/crc32stream.h"
 
 namespace zippie {
 
@@ -43,16 +43,15 @@ ZipMemberInfo& ZipFile::getinfo(const std::string& filename) {
 }
 
 
-streams::scopedistream ZipFile::open(const std::string& filename) {
+std::unique_ptr<std::istream> ZipFile::open(const std::string& filename) {
     ZipMemberInfo& zmi = getinfo(filename);
-    // TODO: wrap scopedstream in another custom streambuf that will perform
-    // crc32 check and decryption (if needed)
-    streams::scopedistream sis(&fp_,
-                               zmi.file_data_offset(),
-                               zmi.file_data_size(),
-                               streams::DEFAULT_BUFFER_SIZE,
-                               false);
-    return sis;
+    std::istream* sis = new streams::scopedistream(&fp_,
+                                                   zmi.file_data_offset(),
+                                                   zmi.file_data_size(),
+                                                   streams::DEFAULT_BUFFER_SIZE,
+                                                   false);
+    return std::unique_ptr<std::istream>(new streams::crc32istream(sis,
+                                                                   zmi.crc32()));
 }
 
 
@@ -66,11 +65,17 @@ void ZipFile::extract(const std::string& filename, const std::string& path) {
     std::string parentdir = os::dirname(dest);
     if (!parentdir.empty() && parentdir != dest)
         os::makedirs(parentdir);
-    // TODO: avoid such copies
-    streams::scopedistream sis(open(filename));
+
+    std::unique_ptr<std::istream> sis(open(filename));
     std::ofstream out(dest.c_str(),
                       std::ios::out | std::ios::binary | std::ios::trunc);
-    out << sis.rdbuf();
+    try {
+        std::copy(std::istreambuf_iterator<char>(*sis),
+                  std::istreambuf_iterator<char>(),
+                  std::ostreambuf_iterator<char>(out));
+    } catch (streams::checksum_error& e) {
+        throw utils::bad_zip_file(e.what());
+    }
 }
 
 

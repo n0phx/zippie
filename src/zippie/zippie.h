@@ -6,6 +6,7 @@
 #include <fstream>
 #include <ios>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -148,7 +149,7 @@ class ZipFile {
  public:
     explicit ZipFile(const char* filename);
     ZipMemberInfo& getinfo(const std::string& filename);
-    streams::scopedistream open(const std::string& filename);
+    std::unique_ptr<std::istream> open(const std::string& filename);
     void extract(const std::string& filename, const std::string& path);
     std::vector<std::string> namelist();
     void close();
