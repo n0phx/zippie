@@ -13,9 +13,9 @@ A zip archive handler tool, attempting to achieve API compatibility with Pythons
  - [X] [DONE] read local file headers with support for data descriptor records
  - [X] [DONE] seek within zip archive members (that one pythons version doesn't have, but with encryption and/or compression, it will get tricky and undefined atm)
  - [X] [DONE] api to perform extraction of zip members
+ - [X] [DONE] streambuf that performs crc32 calculation while reading
 
 ## In Progress
- - [ ] [IN PROGRESS] streambuf that performs crc32 calculation while reading
  - [ ] [IN PROGRESS] streambuf that performs decryption while reading
  - [ ] [IN PROGRESS] expose all header fields through the memberinfo api
 
