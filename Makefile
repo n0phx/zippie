@@ -3,15 +3,15 @@ BUILD_DIR = build
 TARGET_DIR = bin
 SRC_EXT = cpp
 TARGET = $(TARGET_DIR)/zippie
+IGNORED = zippiemodule.cpp
 
 CC = gcc
-CFLAGS += -g -Wall
-
+CFLAGS += -g -Wall -std=c++11
 RM = rm -rf
 
 INC = -I $(SRC_DIR)
 LIB = -lstdc++
-SOURCES = $(shell find $(SRC_DIR) -type f -name *.$(SRC_EXT))
+SOURCES = $(shell find $(SRC_DIR) -type f \( -name *.$(SRC_EXT) ! -name "$(IGNORED)" \))
 OBJS = $(patsubst $(SRC_DIR)/%,$(BUILD_DIR)/%,$(SOURCES:.$(SRC_EXT)=.o))
 
 $(TARGET): $(OBJS)
