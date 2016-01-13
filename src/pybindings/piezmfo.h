@@ -5,22 +5,24 @@
 #include "structmember.h"
 
 #include <ios>
-#include <iostream>
+#include <memory>
 
 #include "zippie/scopedstream.h"
+#include "zippie/streams/crc32stream.h"
 #include "zippie/utils.h"
 
 
 typedef struct {
     PyObject_HEAD
-    zippie::streams::scopedistream* source;
+    std::unique_ptr<std::istream> source;
     std::streamsize size;
 } PieZipMemberFileObject;
 
 
+static PyObject *BadZipFile;
+
+
 static void PieZipMemberFileObject_dealloc(PieZipMemberFileObject* self) {
-    if (self->source)
-        delete self->source;
     self->ob_type->tp_free(reinterpret_cast<PyObject*>(self));
 }
 
@@ -33,13 +35,19 @@ static PyObject* PieZipMemberFileObject_read(PieZipMemberFileObject *self,
 
     zippie::utils::byte_vec buffer;
     std::streamsize bytes_read = 0;
-    if (n >= 0)
-        bytes_read = zippie::utils::read_into(self->source, &buffer, n);
-    else
-        bytes_read = zippie::utils::read_into(self->source,
-                                              &buffer,
-                                              self->size);
-
+    try {
+        if (n >= 0)
+            bytes_read = zippie::utils::read_into(self->source.get(),
+                                                  &buffer,
+                                                  n);
+        else
+            bytes_read = zippie::utils::read_into(self->source.get(),
+                                                  &buffer,
+                                                  self->size);
+    } catch (zippie::streams::checksum_error& e) {
+        PyErr_SetString(BadZipFile, e.what());
+        return NULL;
+    }
     if (bytes_read == 0)
         return Py_BuildValue("s", "");
 

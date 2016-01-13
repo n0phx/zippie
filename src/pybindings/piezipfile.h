@@ -48,7 +48,12 @@ static int PieZipFile_init(PieZipFile* self, PyObject* args, PyObject* kwargs) {
     if (!PyArg_ParseTuple(args, "s", &filename))
         return -1;
 
-    self->zip_file = new zippie::ZipFile(filename);
+    try {
+        self->zip_file = new zippie::ZipFile(filename);
+    } catch (zippie::utils::bad_zip_file& e) {
+        PyErr_SetString(BadZipFile, e.what());
+        return -1;
+    }
     return 0;
 }
 
@@ -139,12 +144,27 @@ static PyObject* PieZipFile_open(PieZipFile *self, PyObject *args) {
     if (!zmi)
         return NULL;
 
-    piezmfo->source = new zippie::streams::scopedistream(
-                                                self->zip_file->open(fname));
+    piezmfo->source = self->zip_file->open(fname);
     piezmfo->size = zmi->file_data_size();
     return reinterpret_cast<PyObject*>(piezmfo);
 }
 
+
+static PyObject* extract(PieZipFile *self,
+                         const std::string& filename,
+                         const std::string& dest) {
+    try {
+        self->zip_file->extract(filename, dest);
+    } catch (std::runtime_error& e) {
+        PyErr_SetString(PyExc_RuntimeError,
+                        "File cannot be extracted to the chosen path.");
+        return NULL;
+    } catch (zippie::utils::bad_zip_file& e) {
+        PyErr_SetString(BadZipFile, e.what());
+        return NULL;
+    }
+    Py_RETURN_NONE;
+}
 
 
 static PyObject* PieZipFile_extract(PieZipFile *self, PyObject *args) {
@@ -154,14 +174,7 @@ static PyObject* PieZipFile_extract(PieZipFile *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "ss", &filename, &dest))
         return NULL;
 
-    try {
-        self->zip_file->extract(std::string(filename), std::string(dest));
-    } catch (std::runtime_error& e) {
-        PyErr_SetString(PyExc_RuntimeError,
-                        "File cannot be extracted to the chosen path.");
-        return NULL;
-    }
-    Py_RETURN_NONE;
+    return extract(self, std::string(filename), std::string(dest));
 }
 
 
@@ -173,16 +186,9 @@ static PyObject* PieZipFile_extractall(PieZipFile *self, PyObject *args) {
 
     std::string path(dest);
     std::vector<std::string> namelist = self->zip_file->namelist();
-    for (std::vector<std::string>::const_iterator it = namelist.begin();
-            it != namelist.end();
-            ++it) {
-        try {
-            self->zip_file->extract(*it, path);
-        } catch (std::runtime_error& e) {
-            PyErr_SetString(PyExc_RuntimeError,
-                            "File cannot be extracted to the chosen path.");
+    for (auto it = namelist.begin(); it != namelist.end(); ++it) {
+        if (!extract(self, *it, path))
             return NULL;
-        }
     }
     Py_RETURN_NONE;
 }

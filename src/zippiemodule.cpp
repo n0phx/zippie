@@ -32,6 +32,10 @@ PyMODINIT_FUNC initzippie(void) {
     if (mod == NULL)
         return;
 
+    char exc_name[] = "zippie.BadZipFile";
+    BadZipFile = PyErr_NewException(exc_name, NULL, NULL);
+    Py_INCREF(BadZipFile);
+    PyModule_AddObject(mod, "BadZipFile", BadZipFile);
     Py_INCREF(&PieZipMemberInfoType);
     PyModule_AddObject(mod,
                        "PieZipMemberInfo",
