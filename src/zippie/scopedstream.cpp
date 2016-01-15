@@ -80,8 +80,8 @@ std::streambuf::int_type scopedstreambuf::underflow() {
         // intermediary buffer exhausted, attempt to read next chunk of data
         // into it
         std::streamsize buffer_size = buffer_.size();
-        std::streamsize bytes_available = std::min(buffer_size,
-                                                   end_ - abspos());
+        std::streamsize left = static_cast<std::streamsize>(end_ - abspos());
+        std::streamsize bytes_available = std::min(buffer_size, left);
         // because scopedbufs may be created by wrapping other subscopedbufs,
         // or multiple scopedbufs may wrap the same file stream, an eof should
         // have no meaning to it, clear the flag and seek to desired position,
