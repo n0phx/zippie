@@ -30,10 +30,10 @@ ZipMemberInfo::ZipMemberInfo(std::istream* source,
 void ZipMemberInfo::load() {
     if (!loaded_) {
         // read local file header
-        lfh_.read(&source_);
+        std::streamsize bytes_read = lfh_.read(&source_);
         // if file is encrypted, read the 12 byte encryption header
         if (lfh_.is_encrypted()) {
-            utils::read_into(&source_, &eh_, EH_SIZE);
+            bytes_read += utils::read_into(&source_, &eh_, EH_SIZE);
             // TODO: implement support for encrypted archives
             throw utils::bad_zip_file("Encrypted archives are not yet "
                                       "supported");
@@ -42,7 +42,7 @@ void ZipMemberInfo::load() {
         // header), the current position should point to the start of the file
         // data itself, but because scopedstreams return their relative position
         // it must be added to the known absolute start position of the member
-        file_data_offset_ = member_start_ + source_.tellg();
+        file_data_offset_ = member_start_ + bytes_read;
         file_data_size_ = lfh_.compressed_size();
         crc32_ = lfh_.crc32();
         if (lfh_.has_data_descriptor()) {
