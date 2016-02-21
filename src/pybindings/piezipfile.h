@@ -149,13 +149,13 @@ static PyObject* PieZipFile_open(PieZipFile *self, PyObject *args) {
     std::string fname(filename);
     zippie::ZipMemberInfo* zmi = get_zmi(self, fname);
     if (!zmi) {
-        PyDECREF(piezmfo);
+        Py_DECREF(piezmfo);
         return NULL;
     }
     try {
         piezmfo->source = self->zip_file->open(fname);
     } catch (std::runtime_error& e) {
-        PyDECREF(piezmfo);
+        Py_DECREF(piezmfo);
         PyErr_SetString(PyExc_RuntimeError, e.what());
         return NULL;
     }
