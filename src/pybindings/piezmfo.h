@@ -7,8 +7,6 @@
 #include <ios>
 #include <memory>
 
-#include "zippie/scopedstream.h"
-#include "zippie/streams/crc32stream.h"
 #include "zippie/utils.h"
 
 
