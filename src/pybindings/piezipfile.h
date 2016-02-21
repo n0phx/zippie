@@ -127,9 +127,7 @@ static PyObject* PieZipFile_namelist(PieZipFile *self) {
     if (!pylist)
         return NULL;
 
-    for (std::vector<std::string>::const_iterator it = namelist.begin();
-            it != namelist.end();
-            ++it) {
+    for (auto it = namelist.begin(); it != namelist.end(); ++it) {
         PyObject* item = PyString_FromString(it->c_str());
         PyList_SET_ITEM(pylist, it - namelist.begin(), item);
     }
