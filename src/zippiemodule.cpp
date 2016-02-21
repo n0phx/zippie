@@ -18,7 +18,7 @@ static PyMethodDef module_methods[] = {
 #endif
 PyMODINIT_FUNC initzippie(void) {
     PyObject* mod;
-    logging::set_level(logging::DEBUG);
+    logging::set_level(logging::ERROR);
 
     if ((PyType_Ready(&PieZipMemberInfoType) < 0) ||
             (PyType_Ready(&PieZipMemberFileObjectType) < 0) ||
