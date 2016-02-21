@@ -215,6 +215,14 @@ static PyObject* PieZipFile_extractall(PieZipFile* self, PyObject* args) {
     Py_RETURN_NONE;
 }
 
+static PyObject* PieZipFile_context_enter(PieZipFile *self, PyObject *args) {
+    return reinterpret_cast<PyObject*>(self);
+}
+
+static PyObject* PieZipFile_context_exit(PieZipFile *self, PyObject *args) {
+    self->zip_file->close();
+    Py_RETURN_NONE;
+}
 
 static PyMethodDef PieZipFile_methods[] = {
     {"getinfo", (PyCFunction)PieZipFile_getinfo, METH_VARARGS,
@@ -227,6 +235,10 @@ static PyMethodDef PieZipFile_methods[] = {
      "Extract all archive members to the specified path."},
     {"namelist", (PyCFunction)PieZipFile_namelist, METH_NOARGS,
      "Return list of all archive member names."},
+    {"__enter__", (PyCFunction)PieZipFile_context_enter, METH_VARARGS,
+     "Enables 'with' statement"},
+    {"__exit__", (PyCFunction)PieZipFile_context_exit, METH_VARARGS,
+     "Enables 'with' statement"},
     {NULL}  /* Sentinel */
 };
 
