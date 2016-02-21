@@ -34,14 +34,9 @@ static PyObject* PieZipMemberFileObject_read(PieZipMemberFileObject *self,
     zippie::utils::byte_vec buffer;
     std::streamsize bytes_read = 0;
     try {
-        if (n >= 0)
-            bytes_read = zippie::utils::read_into(self->source.get(),
-                                                  &buffer,
-                                                  n);
-        else
-            bytes_read = zippie::utils::read_into(self->source.get(),
-                                                  &buffer,
-                                                  self->size);
+        bytes_read = zippie::utils::read_into(self->source.get(),
+                                              &buffer,
+                                              n >= 0 ? n : self->size);
     } catch (zippie::streams::checksum_error& e) {
         PyErr_SetString(BadZipFile, e.what());
         return NULL;
