@@ -79,9 +79,10 @@ static PyObject* create_piezmi(PieZipFile* self, const std::string& filename) {
         return NULL;
 
     zippie::ZipMemberInfo* zmi = get_zmi(self, filename);
-    if (!zmi)
+    if (!zmi) {
+        Py_DECREF(piezmi);
         return NULL;
-
+    }
     piezmi->zip_member_info = zmi;
     // save ``PieZipMemberInfo`` in a map so subsequent accesses will get to use
     // the same object
