@@ -215,14 +215,17 @@ static PyObject* PieZipFile_extractall(PieZipFile* self, PyObject* args) {
     Py_RETURN_NONE;
 }
 
-static PyObject* PieZipFile_context_enter(PieZipFile *self, PyObject *args) {
+
+static PyObject* PieZipFile_context_enter(PieZipFile* self, PyObject* args) {
     return reinterpret_cast<PyObject*>(self);
 }
 
-static PyObject* PieZipFile_context_exit(PieZipFile *self, PyObject *args) {
+
+static PyObject* PieZipFile_context_exit(PieZipFile* self, PyObject* args) {
     self->zip_file->close();
     Py_RETURN_NONE;
 }
+
 
 static PyMethodDef PieZipFile_methods[] = {
     {"getinfo", (PyCFunction)PieZipFile_getinfo, METH_VARARGS,
