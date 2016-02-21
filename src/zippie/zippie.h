@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "zippie/cdfh.h"
-#include "zippie/scopedstream.h"
 #include "zippie/utils.h"
 #include "zippie/zmi.h"
 

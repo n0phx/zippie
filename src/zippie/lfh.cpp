@@ -6,8 +6,8 @@
 
 #include "zippie/extrafield.h"
 #include "zippie/lfh.h"
-#include "zippie/scopedstream.h"
 #include "zippie/utils.h"
+#include "zippie/streams/scopedstream.h"
 
 
 namespace zippie {

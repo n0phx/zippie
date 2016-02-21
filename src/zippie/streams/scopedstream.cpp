@@ -3,7 +3,7 @@
 #include <ios>
 #include <istream>
 
-#include "zippie/scopedstream.h"
+#include "zippie/streams/scopedstream.h"
 
 
 namespace zippie {
