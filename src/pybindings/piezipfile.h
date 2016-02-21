@@ -114,8 +114,9 @@ static PyObject* PieZipFile_getinfo(PieZipFile *self, PyObject *args) {
 
 
 static PyObject* PieZipFile_namelist(PieZipFile *self) {
+    std::vector<std::string> namelist;
     try {
-        std::vector<std::string> namelist = self->zip_file->namelist();
+        namelist = self->zip_file->namelist();
     } catch (std::runtime_error& e) {
         PyErr_SetString(PyExc_RuntimeError, e.what());
         return NULL;
