@@ -65,6 +65,9 @@ static zippie::ZipMemberInfo* get_zmi(PieZipFile* self,
     } catch (std::out_of_range& e) {
         PyErr_SetString(PyExc_KeyError, "Archive member not found.");
         return NULL;
+    } catch (std::runtime_error& e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
     }
 }
 
@@ -113,7 +116,13 @@ static PyObject* PieZipFile_getinfo(PieZipFile *self, PyObject *args) {
 static PyObject* PieZipFile_namelist(PieZipFile *self) {
     PyObject* pylist;
 
-    std::vector<std::string> namelist = self->zip_file->namelist();
+    try {
+        std::vector<std::string> namelist = self->zip_file->namelist();
+    } catch (std::runtime_error& e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
+    }
+
     pylist = PyList_New(namelist.size());
     if (!pylist)
         return NULL;
@@ -144,7 +153,12 @@ static PyObject* PieZipFile_open(PieZipFile *self, PyObject *args) {
     if (!zmi)
         return NULL;
 
-    piezmfo->source = self->zip_file->open(fname);
+    try {
+        piezmfo->source = self->zip_file->open(fname);
+    } catch (std::runtime_error& e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
+    }
     piezmfo->size = zmi->file_data_size();
     return reinterpret_cast<PyObject*>(piezmfo);
 }
@@ -157,7 +171,8 @@ static PyObject* extract(PieZipFile *self,
         self->zip_file->extract(filename, dest);
     } catch (std::runtime_error& e) {
         PyErr_SetString(PyExc_RuntimeError,
-                        "File cannot be extracted to the chosen path.");
+                        "File cannot be extracted to the chosen path. " +
+                        "Reason: " + e.what());
         return NULL;
     } catch (zippie::utils::bad_zip_file& e) {
         PyErr_SetString(BadZipFile, e.what());
@@ -185,7 +200,13 @@ static PyObject* PieZipFile_extractall(PieZipFile *self, PyObject *args) {
         return NULL;
 
     std::string path(dest);
-    std::vector<std::string> namelist = self->zip_file->namelist();
+    try {
+        std::vector<std::string> namelist = self->zip_file->namelist();
+    } catch (std::runtime_error& e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
+    }
+
     for (auto it = namelist.begin(); it != namelist.end(); ++it) {
         if (!extract(self, *it, path))
             return NULL;
