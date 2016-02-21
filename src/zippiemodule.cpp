@@ -39,13 +39,13 @@ PyMODINIT_FUNC initzippie(void) {
     Py_INCREF(&PieZipMemberInfoType);
     PyModule_AddObject(mod,
                        "PieZipMemberInfo",
-                       reinterpret_cast<PyObject *>(&PieZipMemberInfoType));
+                       reinterpret_cast<PyObject*>(&PieZipMemberInfoType));
     Py_INCREF(&PieZipMemberFileObjectType);
     PyModule_AddObject(mod,
                        "PieZipMemberFileObject",
-                       reinterpret_cast<PyObject *>(&PieZipMemberFileObjectType));
+                       reinterpret_cast<PyObject*>(&PieZipMemberFileObjectType));
     Py_INCREF(&PieZipFileType);
     PyModule_AddObject(mod,
                        "PieZipFile",
-                       reinterpret_cast<PyObject *>(&PieZipFileType));
+                       reinterpret_cast<PyObject*>(&PieZipFileType));
 }

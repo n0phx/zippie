@@ -93,7 +93,7 @@ static PyObject* create_piezmi(PieZipFile* self, const std::string& filename) {
 }
 
 
-static PyObject* get_piezmi(PieZipFile *self, const std::string& filename) {
+static PyObject* get_piezmi(PieZipFile* self, const std::string& filename) {
     PyObject* piezmi;
     try {
         piezmi = self->zip_member_infos.at(filename);
@@ -104,7 +104,7 @@ static PyObject* get_piezmi(PieZipFile *self, const std::string& filename) {
 }
 
 
-static PyObject* PieZipFile_getinfo(PieZipFile *self, PyObject *args) {
+static PyObject* PieZipFile_getinfo(PieZipFile* self, PyObject* args) {
     const char* filename;
 
     if (!PyArg_ParseTuple(args, "s", &filename))
@@ -114,7 +114,7 @@ static PyObject* PieZipFile_getinfo(PieZipFile *self, PyObject *args) {
 }
 
 
-static PyObject* PieZipFile_namelist(PieZipFile *self) {
+static PyObject* PieZipFile_namelist(PieZipFile* self) {
     std::vector<std::string> namelist;
     try {
         namelist = self->zip_file->namelist();
@@ -135,7 +135,7 @@ static PyObject* PieZipFile_namelist(PieZipFile *self) {
 }
 
 
-static PyObject* PieZipFile_open(PieZipFile *self, PyObject *args) {
+static PyObject* PieZipFile_open(PieZipFile* self, PyObject* args) {
     const char* filename;
 
     if (!PyArg_ParseTuple(args, "s", &filename))
@@ -164,7 +164,7 @@ static PyObject* PieZipFile_open(PieZipFile *self, PyObject *args) {
 }
 
 
-static PyObject* extract(PieZipFile *self,
+static PyObject* extract(PieZipFile* self,
                          const std::string& filename,
                          const std::string& dest) {
     try {
@@ -182,7 +182,7 @@ static PyObject* extract(PieZipFile *self,
 }
 
 
-static PyObject* PieZipFile_extract(PieZipFile *self, PyObject *args) {
+static PyObject* PieZipFile_extract(PieZipFile* self, PyObject* args) {
     const char* filename;
     const char* dest;
 
@@ -193,7 +193,7 @@ static PyObject* PieZipFile_extract(PieZipFile *self, PyObject *args) {
 }
 
 
-static PyObject* PieZipFile_extractall(PieZipFile *self, PyObject *args) {
+static PyObject* PieZipFile_extractall(PieZipFile* self, PyObject* args) {
     const char* dest;
 
     if (!PyArg_ParseTuple(args, "s", &dest))

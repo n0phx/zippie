@@ -18,7 +18,7 @@ typedef struct {
 } PieZipMemberFileObject;
 
 
-static PyObject *BadZipFile;
+static PyObject* BadZipFile;
 
 
 static void PieZipMemberFileObject_dealloc(PieZipMemberFileObject* self) {
@@ -26,8 +26,8 @@ static void PieZipMemberFileObject_dealloc(PieZipMemberFileObject* self) {
 }
 
 
-static PyObject* PieZipMemberFileObject_read(PieZipMemberFileObject *self,
-                                             PyObject *args) {
+static PyObject* PieZipMemberFileObject_read(PieZipMemberFileObject* self,
+                                             PyObject* args) {
     int n = -1;
     if (!PyArg_ParseTuple(args, "|i", &n))
         return NULL;
@@ -49,8 +49,8 @@ static PyObject* PieZipMemberFileObject_read(PieZipMemberFileObject *self,
 }
 
 
-static PyObject* PieZipMemberFileObject_seek(PieZipMemberFileObject *self,
-                                             PyObject *args) {
+static PyObject* PieZipMemberFileObject_seek(PieZipMemberFileObject* self,
+                                             PyObject* args) {
     int offset = 0;
     int from_what = 0;
     if (!PyArg_ParseTuple(args, "i|i", &offset, &from_what))
@@ -71,7 +71,7 @@ static PyObject* PieZipMemberFileObject_seek(PieZipMemberFileObject *self,
 }
 
 
-static PyObject* PieZipMemberFileObject_tell(PieZipMemberFileObject *self) {
+static PyObject* PieZipMemberFileObject_tell(PieZipMemberFileObject* self) {
     std::streampos position = self->source->tellg();
     return Py_BuildValue("i", position);
 }
