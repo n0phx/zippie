@@ -114,8 +114,6 @@ static PyObject* PieZipFile_getinfo(PieZipFile *self, PyObject *args) {
 
 
 static PyObject* PieZipFile_namelist(PieZipFile *self) {
-    PyObject* pylist;
-
     try {
         std::vector<std::string> namelist = self->zip_file->namelist();
     } catch (std::runtime_error& e) {
@@ -123,7 +121,7 @@ static PyObject* PieZipFile_namelist(PieZipFile *self) {
         return NULL;
     }
 
-    pylist = PyList_New(namelist.size());
+    PyObject* pylist = PyList_New(namelist.size());
     if (!pylist)
         return NULL;
 
