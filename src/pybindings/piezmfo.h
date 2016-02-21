@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "zippie/utils.h"
+#include "zippie/streams/crc32stream.h"
 
 
 typedef struct {
