@@ -200,8 +200,9 @@ static PyObject* PieZipFile_extractall(PieZipFile *self, PyObject *args) {
         return NULL;
 
     std::string path(dest);
+    std::vector<std::string> namelist;
     try {
-        std::vector<std::string> namelist = self->zip_file->namelist();
+        namelist = self->zip_file->namelist();
     } catch (std::runtime_error& e) {
         PyErr_SetString(PyExc_RuntimeError, e.what());
         return NULL;
