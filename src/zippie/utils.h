@@ -60,13 +60,6 @@ class bad_zip_file: public std::exception {
 };
 
 
-class zip_file_closed: public std::runtime_error {
- public:
-    explicit zip_file_closed(const std::string& message):
-                                                std::runtime_error(message) {}
-};
-
-
 std::string to_hex(const unsigned char* bytes, std::size_t length);
 std::string to_hex(const byte_vec& bytes);
 std::string to_hex(const signature_type& sign);
