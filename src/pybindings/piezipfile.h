@@ -170,9 +170,9 @@ static PyObject* extract(PieZipFile *self,
     try {
         self->zip_file->extract(filename, dest);
     } catch (std::runtime_error& e) {
-        PyErr_SetString(PyExc_RuntimeError,
-                        "File cannot be extracted to the chosen path. " +
-                        "Reason: " + e.what());
+        std::string msg("File cannot be extracted to the chosen path. "
+                        "Reason: " + std::string(e.what()));
+        PyErr_SetString(PyExc_RuntimeError, msg.c_str());
         return NULL;
     } catch (zippie::utils::bad_zip_file& e) {
         PyErr_SetString(BadZipFile, e.what());
