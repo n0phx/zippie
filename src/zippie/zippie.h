@@ -147,6 +147,7 @@ class ZipFile {
 
  public:
     explicit ZipFile(const char* filename);
+    virtual ~ZipFile();
     ZipMemberInfo& getinfo(const std::string& filename);
     std::unique_ptr<std::istream> open(const std::string& filename);
     void extract(const std::string& filename, const std::string& path);

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <map>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -56,6 +57,13 @@ class bad_zip_file: public std::exception {
     virtual const char* what() const throw() {
         return message.c_str();
     }
+};
+
+
+class zip_file_closed: public std::runtime_error {
+ public:
+    explicit zip_file_closed(const std::string& message):
+                                                std::runtime_error(message) {}
 };
 
 

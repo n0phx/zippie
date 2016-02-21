@@ -31,12 +31,20 @@ ZipFile::ZipFile(const char* filename): z64_eocd_loc_(),
 }
 
 
+ZipFile::~ZipFile() {
+    fp_.close();
+}
+
+
 void ZipFile::close() {
     fp_.close();
 }
 
 
 ZipMemberInfo& ZipFile::getinfo(const std::string& filename) {
+    if (!fp_.is_open())
+        throw utils::zip_file_closed("Zip file already closed.");
+
     ZipMemberInfo& zmi = zip_file_infos_.at(filename);
     zmi.load();
     return zmi;
@@ -44,6 +52,9 @@ ZipMemberInfo& ZipFile::getinfo(const std::string& filename) {
 
 
 std::unique_ptr<std::istream> ZipFile::open(const std::string& filename) {
+    if (!fp_.is_open())
+        throw utils::zip_file_closed("Zip file already closed.");
+
     ZipMemberInfo& zmi = getinfo(filename);
     std::istream* sis = new streams::scopedistream(&fp_,
                                                    zmi.file_data_offset(),
@@ -56,6 +67,9 @@ std::unique_ptr<std::istream> ZipFile::open(const std::string& filename) {
 
 
 void ZipFile::extract(const std::string& filename, const std::string& path) {
+    if (!fp_.is_open())
+        throw utils::zip_file_closed("Zip file already closed.");
+
     std::string dest = os::join(os::abspath(path), filename);
     if (!dest.empty() && dest[dest.length() - 1] == os::pathsep) {
         os::makedirs(dest);
@@ -80,6 +94,9 @@ void ZipFile::extract(const std::string& filename, const std::string& path) {
 
 
 std::vector<std::string> ZipFile::namelist() {
+    if (!fp_.is_open())
+        throw utils::zip_file_closed("Zip file already closed.");
+
     std::vector<std::string> result;
     for (zmi_map::const_iterator it = zip_file_infos_.begin();
             it != zip_file_infos_.end();
