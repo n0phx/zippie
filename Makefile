@@ -6,7 +6,7 @@ TARGET = $(TARGET_DIR)/zippie
 IGNORED = zippiemodule.cpp
 
 CC = gcc
-CFLAGS += -g -Wall -std=c++11
+CFLAGS += -g -Wall -Wextra -std=c++11
 RM = rm -rf
 
 INC = -I $(SRC_DIR)
