@@ -20,9 +20,16 @@ module = Extension('zippie',
                             'src/zippie/logging.cpp'])
 
 setup(name='zippie',
-      version='0.0.1',
+      version='0.1.dev1',
       description='Zip file handling library',
       author='Andrean Franc',
       author_email='andrean.franc@gmail.com',
+      license="BSD",
       url='https://github.com/integricho/zippie',
-      ext_modules=[module])
+      ext_modules=[module],
+      classifiers=[
+          'Development Status :: 2 - Pre-Alpha',
+          'License :: OSI Approved :: BSD License',
+          'Programming Language :: Python :: 2',
+          'Topic :: Utilities',
+      ])
